@@ -1,5 +1,7 @@
 # easy_scamp
 
+**该项目主仓库在 `https://gitee.com/dream-function/easy-scamp` 。有条件的朋友可以去那里。**
+
 #### 介绍
 easy_scamp - 人性化旋律转 SCAMP 格式。写音乐就像 [('C4',4), ('E4',4), ('r',2)]，直接得到 (MIDI 编号, 秒数)。
 
