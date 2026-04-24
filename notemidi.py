@@ -140,8 +140,9 @@ def translate_tie(dur,bpm=120,wnote=4):
     return total_dur
 
 def translate(mlist,bpm=120,wnote=4,default_velocity=80):
-def translate(mlist, bpm=120, wnote=4, default_velocity=80):
-    """
+    """    
+    def translate(mlist, bpm=120, wnote=4, default_velocity=80):
+    
     Convert a human-friendly melody list to a list of (MIDI pitch, seconds, velocity).
 
     Parameters:
