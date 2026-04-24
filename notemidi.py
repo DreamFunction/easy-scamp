@@ -1,23 +1,6 @@
-# easy_scamp.py
-#  Created：2026-03-19
-#  Updated：2026-04-11
+# notemidi.py
 # Copyright (c) 2026 DreamFunction
 # SPDX-License-Identifier: MIT
-
-"""
-easy_scamp - Convert human-friendly melodies to SCAMP-compatible format
-
-This module provides a simple translate() function that converts a list
-containing note names, rests, and durations (with dotted and additive syntax)
-into a list of (MIDI pitch, seconds) tuples required by SCAMP.
-
-Example:
-    >>> from easy_scamp import translate
-    >>> melody = [('C4', 4), ('E4', 4), ('G4', 4), ('r', 2)]
-    >>> data = translate(melody, bpm=120)
-    >>> print(data)
-    [(60, 0.5), (64, 0.5), (67, 0.5), (None, 1.0)]
-"""
 
 __version__ = '0.1.0'
 __all__ = ['__all__','__version__','DEFAULT','NOTES_MAP','translate','translate_dot','translate_duration','translate_note','translate_tie']
@@ -160,7 +143,7 @@ def translate(mlist,bpm=120,wnote=4):
     """
     def translate(mlist, bpm=120, wnote=4):
 
-    Convert a human-friendly melody list to a SCAMP-compatible (MIDI pitch, seconds) list.
+    Convert a human-friendly melody list to a MIDI pitch, seconds list.
     
     Args:
         mlist: List of (note, duration) tuples
