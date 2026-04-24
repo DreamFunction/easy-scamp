@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "notemidi"
-version = "0.1.0"
+version = "0.2.0"
 description = "A lightweight tool library for converting human-friendly music notation to MIDI data."
 readme = "README.md"
 license = {text = "MIT"}

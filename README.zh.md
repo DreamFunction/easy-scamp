@@ -34,23 +34,25 @@ notemidi **不是** 又一个 MIDI 读写库（如 `mido`, `python-rtmidi`），
 **本模块的核心是`translate`函数**（如果确实有相应需求，你也可以用其他函数，但是平常`translate`够用了）,你可以在模块内找到一个DEFAULT常量，它的值就是'translate'。
 
 ```python
-def translate(mlist, bpm=120, wnote=4):
+def translate(mlist, bpm=120, wnote=4,default_velocity=80):
 
     将人性化旋律列表转换为 MIDI 音高, 秒数 列表。
     
     参数:
-        mlist: 列表，每个元素为 (音符名, 时值) 元组
+        mlist: 列表，每个元素为 (音符名, 时值，力度) 元组
             音符名: 'C4', 'c4', 'F#3', 'r', 'R', None 或 MIDI 数字
             时值: 数字 (4=四分, 8=八分) 或 字符串 ('4.'=附点, '2+2+4'=加法)
+            力度：写了直接透传，不行则使用默认值`default_velocity`。
         bpm: 每分钟拍数，默认 120
         wnote: 全音符拍数，默认 4（即 4/4 拍）
+        default_velocity：默认力度，默认80
     
     返回:
-        [(midi, seconds), ...] 列表，休止符的 midi 为 None
+        [(midi, seconds,velocity), ...] 列表，休止符的 midi 为 None
     
     异常:
         TypeError: 输入类型错误
-        ValueError: 时值不合法或元组长度不为2
+        ValueError: 时值不合法或元组长度不为2或3
         KeyError: 未知音符名
 ```
 

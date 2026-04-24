@@ -139,25 +139,26 @@ def translate_tie(dur,bpm=120,wnote=4):
             total_dur += translate_duration(float(i),bpm=bpm,wnote=wnote)
     return total_dur
 
-def translate(mlist,bpm=120,wnote=4):
+def translate(mlist,bpm=120,wnote=4,default_velocity=80):
+def translate(mlist, bpm=120, wnote=4, default_velocity=80):
     """
-    def translate(mlist, bpm=120, wnote=4):
+    Convert a human-friendly melody list to a list of (MIDI pitch, seconds, velocity).
 
-    Convert a human-friendly melody list to a MIDI pitch, seconds list.
-    
-    Args:
-        mlist: List of (note, duration) tuples
-            note: 'C4', 'c4', 'F#3', 'r', 'R', None, or MIDI number
+    Parameters:
+        mlist: List of tuples (note, duration [, velocity])
+            note: 'C4', 'c4', 'F#3', 'r', 'R', None, or a MIDI number
             duration: number (4=quarter, 8=eighth) or string ('4.'=dotted, '2+2+4'=additive)
+            velocity: optional, 0-127, passed through as-is; uses default_velocity if omitted
         bpm: Beats per minute, default 120
-        wnote: Beats per whole note, default 4 (4/4 time)
-    
+        wnote: Beats per whole note, default 4 (i.e. 4/4 time)
+        default_velocity: Default velocity value when not specified in tuple, default 80
+
     Returns:
-        List of [(midi, seconds), ...], with None for rests
-    
+        List of [(midi, seconds, velocity), ...]; rests are represented as None for the pitch.
+
     Raises:
         TypeError: Invalid input type
-        ValueError: Invalid duration or tuple length not 2
+        ValueError: Invalid duration or tuple length not 2 or 3
         KeyError: Unknown note name
     """
     if not isinstance(mlist,list):
@@ -166,30 +167,37 @@ def translate(mlist,bpm=120,wnote=4):
         raise TypeError("bpm must be a number")
     if not isinstance(wnote,(int,float)):
         raise TypeError("wnote must be a number")
+    if not isinstance(default_velocity,(int,float)):
+        raise TypeError("default_velocity must be a number")
     
     result = []
-    for i in range(len(mlist)):
-        if not isinstance(mlist[i],tuple):
+    for i in mlist:
+        if not isinstance(i,tuple):
             raise TypeError("Each element of music list must be a tuple")
-        if len(mlist[i])!=2:
-            raise ValueError("Each tuple must have length 2 (note, duration)")
+        if len(i) not in (2, 3):
+            raise ValueError("Each tuple must have length 2 or 3 (note, duration [,default_velocity])")
 
-        result.append([0,0])
+        item_result = []
 
-        if isinstance(mlist[i][0],(int,float)):
-            result[i][0] = mlist[i][0]
-        elif isinstance(mlist[i][0],str):
-            result[i][0] = translate_note(mlist[i][0])
+        if isinstance(i[0],(int,float)):
+            item_result.append(i[0])
+        elif isinstance(i[0],str):
+            item_result.append(translate_note(i[0]))
 
-        if isinstance(mlist[i][1],(int,float)):
-            result[i][1] = translate_duration(mlist[i][1],bpm=bpm,wnote=wnote)
-        elif isinstance(mlist[i][1],str):
-            if mlist[i][1].endswith('.'):
-                result[i][1] = translate_dot(mlist[i][1],bpm=bpm,wnote=wnote)
-            elif '+' in mlist[i][1]:
-                result[i][1] = translate_tie(mlist[i][1],bpm=bpm,wnote=wnote)
+        if isinstance(i[1],(int,float)):
+            item_result.append(translate_duration(i[1],bpm=bpm,wnote=wnote))
+        elif isinstance(i[1],str):
+            if i[1].endswith('.'):
+                item_result.append(translate_dot(i[1],bpm=bpm,wnote=wnote))
+            elif '+' in i[1]:
+                item_result.append(translate_tie(i[1],bpm=bpm,wnote=wnote))
             else:
                 raise ValueError("Invalid duration string")
+
+        if len(i)==2:
+            item_result.append(default_velocity)
+        elif len(i)==3:
+            item_result.append(i[2])
         
-        result[i] = tuple(result[i])
+        result.append(tuple(item_result))
     return result

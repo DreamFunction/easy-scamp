@@ -35,25 +35,26 @@ notemidi is **not** another MIDI I/O library (like `mido`, `python-rtmidi`). Ins
 
 **The core function of this module is `translate`** (for most use cases, other functions are not needed). You can also find a `DEFAULT` constant inside the module whose value is `'translate'`.
 
-```python
-def translate(mlist, bpm=120, wnote=4):
+def translate(mlist, bpm=120, wnote=4, default_velocity=80):
     """
-    Convert a human‑friendly melody list to a list of (MIDI pitch, seconds).
-    
+    Convert a human-friendly melody list to a list of (MIDI pitch, seconds, velocity).
+
     Parameters:
-        mlist: List of (note_name, duration) tuples
-            note_name: 'C4', 'c4', 'F#3', 'r', 'R', None, or a MIDI number
+        mlist: List of tuples (note, duration [, velocity])
+            note: 'C4', 'c4', 'F#3', 'r', 'R', None, or a MIDI number
             duration: number (4=quarter, 8=eighth) or string ('4.'=dotted, '2+2+4'=additive)
+            velocity: optional, 0-127, passed through as-is; uses default_velocity if omitted
         bpm: Beats per minute, default 120
         wnote: Beats per whole note, default 4 (i.e. 4/4 time)
-    
+        default_velocity: Default velocity value when not specified in tuple, default 80
+
     Returns:
-        List of [(midi, seconds), ...]; rests are represented as None for the pitch.
-    
+        List of [(midi, seconds, velocity), ...]; rests are represented as None for the pitch.
+
     Raises:
-        TypeError: invalid input type
-        ValueError: invalid duration or tuple length not 2
-        KeyError: unknown note name
+        TypeError: Invalid input type
+        ValueError: Invalid duration or tuple length not 2 or 3
+        KeyError: Unknown note name
     """
 
 #### Appendix(Other Functions)
